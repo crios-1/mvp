@@ -1,0 +1,363 @@
+# React Native MVVM Todo & Photo App PRD
+
+## Overview
+A React Native mobile application built with MVVM architecture that provides offline-first functionality for managing personal information, todo items, and photo collections. The app features a dashboard-based navigation system with status tracking and comprehensive form validation. The application is designed to work entirely offline with future synchronization capabilities to a web API.
+
+**Problem it solves:** Users need a reliable, offline-capable mobile app for managing personal data, tasks, and photos without requiring constant internet connectivity.
+
+**Target users:** Individuals who need to organize personal information, manage tasks, and store photos with offline access and eventual cloud synchronization.
+
+**Value proposition:** Provides a seamless offline experience with robust data management, intuitive navigation, and comprehensive validation while maintaining data integrity and user experience.
+
+## Core Features
+
+### 1. Dashboard Navigation System
+- **What it does:** Central hub displaying all app sections with status indicators and navigation tiles
+- **Why it's important:** Provides clear overview of app functionality and completion status
+- **How it works:** Grid-based layout with color-coded tiles that change based on page completion status
+
+### 2. Personal Information Form
+- **What it does:** Collects and validates user information with reusable validation framework
+- **Why it's important:** Establishes user profile and demonstrates validation patterns for future forms
+- **How it works:** Form with multiple input types, real-time validation, and TypeORM persistence
+
+### 3. Todo Management System
+- **What it does:** Create, read, update, and delete todo items with offline storage
+- **Why it's important:** Core task management functionality with persistent data
+- **How it works:** List-based interface with CRUD operations and local database storage
+
+### 4. Photo Gallery with Camera Integration
+- **What it does:** Capture photos using device camera and display them in a gallery format
+- **Why it's important:** Multimedia content management with device integration
+- **How it works:** Camera access, photo storage, and gallery display with offline persistence
+
+### 5. Offline Data Management
+- **What it does:** Ensures all data operations work without internet connectivity
+- **Why it's important:** Provides reliable user experience regardless of network conditions
+- **How it works:** TypeORM local database with queue system for future API synchronization
+
+### 6. Status Tracking System
+- **What it does:** Tracks completion status of each page and updates dashboard accordingly
+- **Why it's important:** Provides visual feedback on user progress and app usage
+- **How it works:** Status persistence with real-time dashboard updates
+
+## User Experience
+
+### User Personas
+1. **Busy Professional:** Needs quick task management and photo organization during commutes
+2. **Offline User:** Frequently works in areas with poor or no internet connectivity
+3. **Data-Conscious User:** Values data integrity and comprehensive validation
+
+### Key User Flows
+1. **App Launch Flow:**
+   - App starts → Dashboard loads → User sees all available sections
+   - Color-coded tiles indicate completion status
+   - Tap any tile to navigate to specific functionality
+
+2. **Information Entry Flow:**
+   - Navigate to Personal Info → Fill form with validation feedback
+   - Save data → Status updates to "completed" → Dashboard tile changes color
+
+3. **Todo Management Flow:**
+   - Navigate to Todo List → Add/edit/delete items → All changes saved locally
+   - Mark todos complete → Status updates → Dashboard reflects progress
+
+4. **Photo Management Flow:**
+   - Navigate to Photo Gallery → Take new photo or view existing
+   - Photos stored locally → Gallery updates → Status tracking
+
+### UI/UX Considerations
+- Clean, intuitive dashboard with clear visual hierarchy
+- Consistent form validation patterns across all input screens
+- Responsive design that works across different device sizes
+- Clear status indicators and completion feedback
+- Offline-first design with no loading states for local operations
+
+## Technical Architecture
+
+### IDesign Methodology & SOLID Principles Integration
+
+The application architecture follows IDesign methodology and SOLID principles to ensure maintainable, scalable, and testable code:
+
+#### IDesign Methodology Components:
+1. **Services Layer:** Business logic encapsulation with clear contracts
+2. **Data Access Layer:** Repository pattern with abstraction
+3. **Infrastructure Layer:** Cross-cutting concerns and external integrations
+4. **Presentation Layer:** UI components with minimal business logic
+5. **Contracts Layer:** Interface definitions and data contracts
+
+#### SOLID Principles Implementation:
+- **Single Responsibility Principle (SRP):** Each class/module has one reason to change
+- **Open/Closed Principle (OCP):** Open for extension, closed for modification
+- **Liskov Substitution Principle (LSP):** Derived classes can substitute base classes
+- **Interface Segregation Principle (ISP):** Clients depend only on interfaces they use
+- **Dependency Inversion Principle (DIP):** High-level modules don't depend on low-level modules
+
+### System Components
+1. **MVVM Architecture Layers with IDesign:**
+   - **Models (Contracts Layer):** TypeORM entities and data contracts
+   - **Views (Presentation Layer):** React Native screens with minimal logic
+   - **ViewModels (Services Layer):** Business logic, validation, and orchestration
+   - **Repositories (Data Access Layer):** Data persistence abstraction
+   - **Infrastructure Services:** Cross-cutting concerns (logging, validation, etc.)
+
+2. **Data Layer with SOLID Principles:**
+   - **Repository Interface:** Abstract data access contracts
+   - **Concrete Repositories:** TypeORM implementations
+   - **Unit of Work Pattern:** Transaction management
+   - **Migration System:** Schema evolution management
+
+3. **Validation Framework with ISP:**
+   - **Validation Interfaces:** Segregated validation contracts
+   - **Validation Rules:** Single-purpose validation implementations
+   - **Validation Orchestrator:** Composite validation coordination
+   - **Error Handling:** Centralized error management
+
+4. **Navigation System with DIP:**
+   - **Navigation Service Interface:** Abstract navigation contracts
+   - **React Navigation Implementation:** Concrete navigation provider
+   - **Route Management:** Centralized route definitions
+   - **Deep Linking Support:** External navigation handling
+
+### Data Models
+```typescript
+// User Information
+interface UserInfo {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Todo Item
+interface Todo {
+  id: string;
+  title: string;
+  description: string;
+  isCompleted: boolean;
+  priority: 'low' | 'medium' | 'high';
+  dueDate?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Photo Item
+interface Photo {
+  id: string;
+  filename: string;
+  path: string;
+  caption?: string;
+  takenAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Page Status
+interface PageStatus {
+  pageId: string;
+  isCompleted: boolean;
+  completedAt?: Date;
+  lastAccessed: Date;
+}
+```
+
+### APIs and Integrations with SOLID Principles
+- **Camera Service Interface:** Abstract camera operations (ISP)
+- **File System Service Interface:** Abstract file operations (DIP)
+- **Mock Services:** Simulated API endpoints following service contracts
+- **Validation Library:** Custom validation framework with segregated interfaces
+- **Dependency Injection Container:** Service registration and resolution
+- **Service Locator Pattern:** Cross-cutting service access
+
+### Infrastructure Requirements
+- React Native 0.80.1+ with TypeScript
+- TypeORM with SQLite
+- React Navigation for routing
+- Jest for testing framework
+- Metro bundler configuration
+
+## Development Roadmap
+
+### Phase 1: Foundation & Core Architecture with IDesign & SOLID
+- Set up IDesign methodology project structure with TypeScript
+- Implement SOLID principles foundation and dependency injection container
+- Create service layer contracts and interfaces (ISP, DIP)
+- Implement TypeORM configuration with repository pattern (SRP, OCP)
+- Create base ViewModels following single responsibility principle
+- Set up navigation system with abstract service contracts
+- Implement status tracking system with segregated interfaces
+- Create reusable validation framework with interface segregation
+- Set up testing infrastructure with dependency injection support
+- Establish cross-cutting concerns infrastructure layer
+
+### Phase 2: Personal Information Management with SOLID
+- Design and implement UserInfo data model with contracts layer
+- Create Personal Information form with segregated validation interfaces
+- Implement form state management following single responsibility principle
+- Add TypeORM persistence with repository pattern and dependency inversion
+- Create status tracking service with abstract contracts
+- Implement dashboard tile status updates using service locator pattern
+- Add comprehensive unit and integration tests with dependency injection
+- Establish error handling infrastructure with centralized error management
+
+### Phase 3: Todo Management System with SOLID
+- Design and implement Todo data model with contracts layer
+- Create Todo list interface with segregated CRUD service contracts
+- Implement todo item creation and editing following SRP
+- Add todo completion tracking with abstract status service
+- Implement todo filtering and sorting with strategy pattern (OCP)
+- Add TypeORM persistence with repository pattern and unit of work
+- Update dashboard with todo completion status using service contracts
+- Add comprehensive testing for todo functionality with dependency injection
+- Implement todo business rules with separate service layer
+
+### Phase 4: Photo Gallery & Camera Integration with SOLID
+- Set up camera permissions with abstract permission service (DIP)
+- Implement photo capture functionality with camera service interface
+- Create photo gallery display interface with segregated contracts
+- Add photo metadata management with separate metadata service (SRP)
+- Implement photo storage and retrieval with repository pattern
+- Add photo deletion and management features with command pattern
+- Update dashboard with photo gallery status using service contracts
+- Add comprehensive testing for camera and gallery features with mocks
+- Implement photo processing pipeline with chain of responsibility pattern
+- Establish file system abstraction layer for cross-platform compatibility
+
+### Phase 5: Offline Optimization & Polish with SOLID
+- Optimize offline performance with caching service abstraction
+- Implement data synchronization queue with command pattern (OCP)
+- Add error handling with centralized error service and decorator pattern
+- Implement data backup and recovery with strategy pattern
+- Add comprehensive integration tests with dependency injection
+- Performance optimization with observer pattern for state management
+- UI/UX refinements with facade pattern for complex UI operations
+- Implement logging infrastructure with abstract logging service
+- Add monitoring and analytics with segregated service contracts
+- Establish configuration management with abstract configuration service
+
+### Phase 6: Future API Integration Preparation with SOLID
+- Design API service interfaces with interface segregation principle
+- Implement mock API services with dependency inversion
+- Create data synchronization framework with adapter pattern
+- Add conflict resolution strategies with strategy pattern (OCP)
+- Implement offline queue management with command pattern
+- Prepare for real API integration with abstract factory pattern
+- Establish API versioning with decorator pattern
+- Implement retry mechanisms with circuit breaker pattern
+- Add API authentication with abstract auth service
+- Create API response caching with proxy pattern
+
+## Logical Dependency Chain
+
+### Foundation First (Phase 1) - IDesign & SOLID Foundation
+- IDesign methodology and SOLID principles must be established before any features
+- Dependency injection container and service contracts are prerequisite for all operations
+- TypeORM setup with repository pattern is prerequisite for all data operations
+- Abstract navigation system with service contracts needed before individual pages
+- Validation framework with interface segregation required before form implementation
+- Testing infrastructure with dependency injection must be in place from the start
+- Cross-cutting concerns infrastructure layer must be established early
+
+### Quick Visual Feedback (Phase 2) - SOLID Implementation
+- Personal Information form provides immediate user value with SOLID principles
+- Demonstrates validation framework with interface segregation in action
+- Establishes status tracking patterns with abstract service contracts
+- Creates first dashboard tile with status updates using dependency injection
+- Validates IDesign methodology implementation with real user interaction
+
+### Core Functionality (Phase 3) - SOLID Patterns
+- Todo system builds on established SOLID patterns and IDesign layers
+- Reuses validation with interface segregation and status tracking with abstract contracts
+- Demonstrates CRUD operations with repository pattern and offline storage
+- Expands dashboard functionality using service locator and dependency injection
+- Implements business rules with separate service layer following SRP
+
+### Advanced Features (Phase 4) - SOLID Integration
+- Photo gallery requires camera permissions and file system with abstract services
+- Builds on established data management patterns with repository and unit of work
+- Adds multimedia content management with segregated service contracts
+- Completes core app functionality with comprehensive SOLID implementation
+- Demonstrates complex integrations while maintaining loose coupling
+
+### Optimization & Future-Proofing (Phase 5-6) - SOLID Excellence
+- Performance optimization with design patterns and SOLID principles
+- API preparation with abstract contracts and dependency inversion
+- Comprehensive testing across all features with dependency injection
+- Cross-cutting concerns optimization with infrastructure layer
+- Maintainability and extensibility validation through SOLID compliance
+
+## Risks and Mitigations
+
+### Technical Challenges with SOLID & IDesign
+- **Risk:** TypeORM integration with React Native may have compatibility issues
+- **Mitigation:** Use repository pattern with abstract interfaces, maintain backup SQLite implementation with dependency inversion
+
+- **Risk:** Camera permissions and file system access may vary across devices
+- **Mitigation:** Implement abstract permission and file system services with concrete implementations for each platform
+
+- **Risk:** Offline data synchronization complexity
+- **Mitigation:** Use command pattern for queue management, implement with abstract service contracts and dependency injection
+
+- **Risk:** SOLID principles may add initial complexity
+- **Mitigation:** Start with core SOLID patterns, gradually introduce advanced design patterns as needed
+
+- **Risk:** IDesign methodology may require more upfront planning
+- **Mitigation:** Establish clear layer boundaries early, use dependency injection for flexibility
+
+### MVP Scope Management with SOLID
+- **Risk:** Feature creep during development
+- **Mitigation:** Strict adherence to MVP requirements with SOLID principles, defer non-essential features to future phases
+
+- **Risk:** Complex validation framework may slow development
+- **Mitigation:** Start with basic validation patterns using interface segregation, expand incrementally with dependency injection
+
+- **Risk:** IDesign methodology may seem over-engineered for MVP
+- **Mitigation:** Focus on core IDesign layers (Services, Data Access, Presentation), add infrastructure layer as needed
+
+### Resource Constraints with SOLID
+- **Risk:** Testing coverage may be insufficient
+- **Mitigation:** Implement testing from day one with dependency injection, use automated testing tools and SOLID principles for testability
+
+- **Risk:** Performance issues with large photo collections
+- **Mitigation:** Implement pagination and lazy loading with repository pattern, use caching service with abstract contracts
+
+- **Risk:** SOLID principles may require more development time initially
+- **Mitigation:** Focus on core SOLID benefits (maintainability, testability), use design patterns strategically
+
+## Appendix
+
+### Technical Specifications with SOLID & IDesign
+- **Minimum React Native Version:** 0.80.1
+- **Target Platforms:** iOS 12+, Android API 21+
+- **Database:** SQLite via TypeORM with repository pattern
+- **Testing Framework:** Jest + React Native Testing Library with dependency injection
+- **Navigation:** React Navigation 6+ with abstract service contracts
+- **State Management:** React hooks with custom ViewModels following SRP
+- **Dependency Injection:** Custom DI container or React Context with service locator
+- **Design Patterns:** Repository, Command, Strategy, Observer, Factory, Adapter
+- **Architecture:** IDesign methodology with SOLID principles
+- **Validation:** Interface-segregated validation framework
+
+### Research Findings with SOLID & IDesign
+- TypeORM provides excellent offline-first capabilities with SQLite and supports repository pattern
+- React Native Camera library is well-maintained and can be abstracted with service interfaces
+- MVVM architecture with IDesign methodology provides clear separation of concerns for maintainable code
+- Offline-first approach improves user experience and reduces dependency on network
+- SOLID principles significantly improve code maintainability and testability in React Native applications
+- IDesign methodology provides clear layer boundaries that scale well with application complexity
+- Dependency injection patterns work well with React Native's component lifecycle
+- Interface segregation principle is particularly valuable for mobile app development with varying device capabilities
+
+### Validation Framework Design with SOLID
+- Reusable validation rules with TypeScript support and interface segregation
+- Real-time validation feedback with observer pattern
+- Extensible for future form requirements using open/closed principle
+- Consistent error messaging and user experience with centralized error handling
+- Validation orchestration with composite pattern
+- Cross-field validation with strategy pattern
+- Async validation support with command pattern
+- Validation rule composition with decorator pattern 

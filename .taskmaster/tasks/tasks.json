@@ -1,0 +1,748 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Setup Project Structure with IDesign & SOLID Foundation",
+        "description": "Initialize React Native project with TypeScript and establish the IDesign methodology structure with SOLID principles foundation.",
+        "details": "1. Create a new React Native project with TypeScript template using `npx react-native init TodoPhotoApp --template react-native-template-typescript`\n2. Set up project structure following IDesign methodology:\n   - `/src/contracts` - For interfaces and data contracts\n   - `/src/services` - For business logic and ViewModels\n   - `/src/data` - For repositories and data access\n   - `/src/infrastructure` - For cross-cutting concerns\n   - `/src/presentation` - For UI components and screens\n3. Configure TypeScript with strict mode and path aliases\n4. Set up ESLint and Prettier for code quality\n5. Implement a dependency injection container:\n```typescript\nclass ServiceContainer {\n  private static instance: ServiceContainer;\n  private services: Map<string, any> = new Map();\n\n  static getInstance(): ServiceContainer {\n    if (!ServiceContainer.instance) {\n      ServiceContainer.instance = new ServiceContainer();\n    }\n    return ServiceContainer.instance;\n  }\n\n  register<T>(key: string, implementation: T): void {\n    this.services.set(key, implementation);\n  }\n\n  resolve<T>(key: string): T {\n    if (!this.services.has(key)) {\n      throw new Error(`Service ${key} not registered`);\n    }\n    return this.services.get(key) as T;\n  }\n}\n```\n6. Create base interfaces for services following SOLID principles\n7. Set up Jest for testing with dependency injection support",
+        "testStrategy": "1. Verify project structure matches IDesign methodology\n2. Test dependency injection container with mock services\n3. Validate TypeScript configuration with sample interfaces\n4. Run ESLint to ensure code quality standards\n5. Verify Jest configuration with sample test cases",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Initialize React Native Project with TypeScript",
+            "description": "Create a new React Native project with TypeScript template and set up the basic configuration files.",
+            "dependencies": [],
+            "details": "1. Run `npx react-native init TodoPhotoApp --template react-native-template-typescript`\n2. Configure ESLint and Prettier for code quality\n3. Set up .gitignore and other configuration files\n4. Initialize package.json with required scripts\n5. Create README.md with project documentation",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Establish IDesign Folder Structure",
+            "description": "Set up the project folder structure following IDesign methodology with clear separation of concerns.",
+            "dependencies": [
+              1
+            ],
+            "details": "1. Create `/src/contracts` directory for interfaces and data contracts\n2. Create `/src/services` directory for business logic and ViewModels\n3. Create `/src/data` directory for repositories and data access\n4. Create `/src/infrastructure` directory for cross-cutting concerns\n5. Create `/src/presentation` directory for UI components and screens\n6. Add README files in each directory explaining its purpose",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Configure TypeScript with Advanced Features",
+            "description": "Set up TypeScript configuration with strict type checking and advanced features to support SOLID principles.",
+            "dependencies": [
+              1
+            ],
+            "details": "1. Create tsconfig.json with strict type checking enabled\n2. Configure path aliases for cleaner imports\n3. Set up declaration files for external libraries\n4. Configure TypeScript for React Native specifics\n5. Add type definitions for project-specific entities\n6. Set up barrel exports for cleaner imports",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implement Dependency Injection Container",
+            "description": "Create a dependency injection system to facilitate SOLID principles, particularly Dependency Inversion.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "1. Create DI container interface in `/src/contracts/infrastructure/di-container.interface.ts`\n2. Implement concrete DI container in `/src/infrastructure/di/di-container.ts`\n3. Set up service registration mechanism\n4. Create factory methods for complex object creation\n5. Implement singleton and transient lifetime management\n6. Add DI container provider at application root",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Set Up Testing Infrastructure",
+            "description": "Configure Jest and React Native Testing Library with the project structure to enable comprehensive testing.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "details": "1. Install Jest and React Native Testing Library\n2. Configure Jest for TypeScript support\n3. Create test utilities for mocking dependencies\n4. Set up test folder structure mirroring source code\n5. Create sample tests for each layer (contracts, services, data, infrastructure, presentation)\n6. Configure code coverage reporting",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Implement TypeORM Configuration with Repository Pattern",
+        "description": "Set up TypeORM with SQLite for local database storage and implement the repository pattern following SOLID principles.",
+        "details": "1. Install required packages: `yarn add typeorm reflect-metadata sqlite3 @types/sqlite3`\n2. Configure TypeORM with SQLite driver in `src/infrastructure/database/typeorm-config.ts`:\n```typescript\nimport { createConnection, Connection } from 'typeorm';\nimport { UserInfo } from '../../contracts/models/user-info.model';\nimport { Todo } from '../../contracts/models/todo.model';\nimport { Photo } from '../../contracts/models/photo.model';\nimport { PageStatus } from '../../contracts/models/page-status.model';\n\nexport const initializeDatabase = async (): Promise<Connection> => {\n  return createConnection({\n    type: 'sqlite',\n    database: 'todoapp.db',\n    entities: [UserInfo, Todo, Photo, PageStatus],\n    synchronize: true,\n    logging: __DEV__\n  });\n};\n```\n3. Create entity models based on the PRD data models in `src/contracts/models/`\n4. Implement repository interfaces in `src/contracts/repositories/`:\n```typescript\nexport interface IRepository<T> {\n  findAll(): Promise<T[]>;\n  findById(id: string): Promise<T | undefined>;\n  create(entity: Omit<T, 'id'>): Promise<T>;\n  update(id: string, entity: Partial<T>): Promise<T>;\n  delete(id: string): Promise<boolean>;\n}\n```\n5. Create concrete repository implementations in `src/data/repositories/`\n6. Implement Unit of Work pattern for transaction management\n7. Register repositories in the dependency injection container",
+        "testStrategy": "1. Create mock SQLite database for testing\n2. Test entity creation and schema validation\n3. Test CRUD operations for each repository\n4. Verify transaction management with Unit of Work pattern\n5. Test repository pattern with dependency injection\n6. Validate entity relationships and constraints",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Install and configure TypeORM with SQLite",
+            "description": "Set up the necessary packages and create the basic TypeORM configuration for SQLite database connection",
+            "dependencies": [],
+            "details": "1. Install required packages: typeorm, reflect-metadata, sqlite3, and @types/sqlite3\n2. Create database configuration file in src/infrastructure/database/typeorm-config.ts\n3. Configure connection options including entities, migrations, and subscribers\n4. Set up SQLite database path and logging options\n5. Create a connection manager utility to handle database connections",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Create entity models with TypeORM decorators",
+            "description": "Define the database entity models with appropriate TypeORM decorators for all required application models",
+            "dependencies": [
+              1
+            ],
+            "details": "1. Create entity models for UserInfo, Todo, Photo, and PageStatus\n2. Add appropriate TypeORM decorators (@Entity, @Column, etc.)\n3. Define primary keys, relationships, and constraints\n4. Implement proper data types and validation rules\n5. Set up indexes for performance optimization\n6. Add created/updated timestamp columns where appropriate",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Define repository interfaces",
+            "description": "Create repository interfaces following the Interface Segregation Principle for each entity type",
+            "dependencies": [
+              2
+            ],
+            "details": "1. Create a generic IRepository interface with basic CRUD operations\n2. Define specific repository interfaces for each entity (IUserRepository, ITodoRepository, etc.)\n3. Add specialized methods for each entity type as needed\n4. Document interface methods with clear parameter and return type definitions\n5. Ensure interfaces follow SOLID principles, particularly Interface Segregation",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implement concrete repository classes",
+            "description": "Create concrete repository implementations that use TypeORM to perform database operations",
+            "dependencies": [
+              3
+            ],
+            "details": "1. Implement concrete repository classes for each entity type\n2. Inject TypeORM repository using dependency injection\n3. Implement all methods defined in the repository interfaces\n4. Add proper error handling and logging\n5. Ensure type safety throughout the implementation\n6. Add query builders for complex queries when needed",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement Unit of Work pattern",
+            "description": "Create a Unit of Work implementation to manage transactions and ensure data consistency",
+            "dependencies": [
+              4
+            ],
+            "details": "1. Define IUnitOfWork interface in src/contracts/data/unit-of-work.interface.ts\n2. Implement TypeOrmUnitOfWork class that manages transactions\n3. Add methods for beginning, committing, and rolling back transactions\n4. Implement repository factory methods to get repositories within a transaction\n5. Ensure proper resource cleanup and error handling\n6. Add transaction isolation level configuration",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Set up dependency injection for repositories",
+            "description": "Register repositories and Unit of Work in the dependency injection container",
+            "dependencies": [
+              5
+            ],
+            "details": "1. Create repository module for dependency registration\n2. Register all repository interfaces and their implementations\n3. Register the Unit of Work implementation\n4. Configure singleton instances where appropriate\n5. Set up factory methods for repositories that require transaction context\n6. Add database initialization code to application startup",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Create Navigation System with Dashboard",
+        "description": "Implement the navigation system with React Navigation and create the dashboard as the central hub with status indicators.",
+        "details": "1. Install React Navigation: `yarn add @react-navigation/native @react-navigation/stack react-native-screens react-native-safe-area-context`\n2. Create navigation service interface in `src/contracts/services/navigation-service.interface.ts`:\n```typescript\nexport interface INavigationService {\n  navigate(routeName: string, params?: any): void;\n  goBack(): void;\n  getCurrentRoute(): string;\n  setNavigator(navigatorRef: any): void;\n}\n```\n3. Implement concrete navigation service with React Navigation\n4. Define route constants in `src/infrastructure/navigation/routes.ts`\n5. Create dashboard screen component in `src/presentation/screens/dashboard/dashboard-screen.tsx`\n6. Implement grid-based layout with color-coded tiles:\n```typescript\nconst DashboardScreen: React.FC = () => {\n  const viewModel = useViewModel<IDashboardViewModel>(ViewModelType.Dashboard);\n  const { pageStatuses, navigateToPage } = viewModel;\n  \n  return (\n    <SafeAreaView style={styles.container}>\n      <Text style={styles.title}>Dashboard</Text>\n      <View style={styles.grid}>\n        {Object.entries(pageStatuses).map(([pageId, status]) => (\n          <TouchableOpacity \n            key={pageId}\n            style={[styles.tile, { backgroundColor: status.isCompleted ? '#4CAF50' : '#2196F3' }]}\n            onPress={() => navigateToPage(pageId)}\n          >\n            <Text style={styles.tileText}>{pageId}</Text>\n            <Text style={styles.statusText}>\n              {status.isCompleted ? 'Completed' : 'Pending'}\n            </Text>\n          </TouchableOpacity>\n        ))}\n      </View>\n    </SafeAreaView>\n  );\n};\n```\n7. Create dashboard ViewModel with status tracking logic\n8. Register navigation service in dependency injection container\n9. Implement deep linking support",
+        "testStrategy": "1. Test navigation service with mock navigator\n2. Verify route navigation with test cases\n3. Test dashboard rendering with different status states\n4. Validate color-coding based on completion status\n5. Test navigation from dashboard to other screens\n6. Verify deep linking functionality",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set up React Navigation Infrastructure",
+            "description": "Install and configure React Navigation library with necessary dependencies and create the basic navigation structure for the application.",
+            "dependencies": [],
+            "details": "1. Install React Navigation and dependencies\n2. Set up navigation container in App.js\n3. Define route constants in a separate file\n4. Create basic stack navigator structure\n5. Configure navigation options and themes",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Navigation Service Pattern",
+            "description": "Create a service-based approach for navigation that follows SOLID principles and allows for navigation from anywhere in the app.",
+            "dependencies": [
+              1
+            ],
+            "details": "1. Implement the INavigationService interface\n2. Create NavigationService class with React Navigation integration\n3. Set up navigation reference handling\n4. Implement methods for navigation, back navigation, and route tracking\n5. Configure dependency injection for the service",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Develop Dashboard UI Components",
+            "description": "Create the central dashboard UI that will serve as the main hub for the application with proper layout and navigation options.",
+            "dependencies": [
+              1
+            ],
+            "details": "1. Design dashboard layout with grid or card-based UI\n2. Create reusable dashboard card components\n3. Implement navigation buttons/cards for each main feature\n4. Add animations and transitions for better UX\n5. Ensure responsive design for different screen sizes",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Integrate Status Indicators System",
+            "description": "Implement a visual status tracking system on the dashboard that shows completion status of different application sections.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "1. Create status indicator component with color coding\n2. Implement status tracking logic and state management\n3. Connect indicators to navigation service for real-time updates\n4. Add visual feedback for completed/pending sections\n5. Implement persistence of status data using TypeORM",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Implement Validation Framework with Interface Segregation",
+        "description": "Create a reusable validation framework following Interface Segregation Principle to support form validation across the application.",
+        "details": "1. Define validation interfaces in `src/contracts/validation/`:\n```typescript\nexport interface IValidationRule<T> {\n  validate(value: T): ValidationResult;\n}\n\nexport interface IAsyncValidationRule<T> {\n  validateAsync(value: T): Promise<ValidationResult>;\n}\n\nexport interface IFieldValidator<T> {\n  validateField(fieldName: string, value: T): ValidationResult;\n}\n\nexport interface IFormValidator<T> {\n  validateForm(form: T): ValidationResults;\n  validateField(fieldName: keyof T, value: any): ValidationResult;\n}\n\nexport type ValidationResult = {\n  isValid: boolean;\n  message?: string;\n};\n\nexport type ValidationResults = {\n  [field: string]: ValidationResult;\n};\n```\n2. Implement common validation rules in `src/infrastructure/validation/rules/`:\n   - Required validation\n   - Email validation\n   - Phone number validation\n   - Min/max length validation\n3. Create validation orchestrator in `src/infrastructure/validation/validation-orchestrator.ts`\n4. Implement form validator factory in `src/infrastructure/validation/form-validator-factory.ts`\n5. Create validation hooks for React components\n6. Implement error display components for form fields\n7. Register validation services in dependency injection container",
+        "testStrategy": "1. Unit test each validation rule independently\n2. Test validation orchestrator with multiple rules\n3. Verify form validator with complex validation scenarios\n4. Test async validation rules with mock API calls\n5. Validate error message formatting and localization\n6. Test validation hooks in component context",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Validation Interfaces",
+            "description": "Create the core validation interfaces following Interface Segregation Principle",
+            "dependencies": [],
+            "details": "1. Create `IValidationRule<T>` interface for single value validation\n2. Create `IAsyncValidationRule<T>` for asynchronous validation\n3. Create `IFieldValidator<T>` for field-specific validation\n4. Create `IFormValidator<T>` for whole form validation\n5. Create `ValidationResult` and `ValidationResults` types\n6. Document each interface with JSDoc comments",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Common Validation Rules",
+            "description": "Create a set of reusable validation rules implementing the validation interfaces",
+            "dependencies": [
+              1
+            ],
+            "details": "1. Implement `RequiredRule` for required field validation\n2. Implement `EmailRule` for email format validation\n3. Implement `MinLengthRule` and `MaxLengthRule` for string length validation\n4. Implement `PatternRule` for regex-based validation\n5. Implement `NumberRangeRule` for numeric value validation\n6. Create unit tests for each validation rule",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Create Validation Orchestrator",
+            "description": "Develop a validation orchestrator to manage multiple validation rules",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "1. Create `ValidationOrchestrator` class that accepts multiple validation rules\n2. Implement methods to run validation rules in sequence\n3. Add support for conditional validation rules\n4. Implement error message formatting and localization\n5. Add support for async validation with proper error handling\n6. Create unit tests for the orchestrator with various rule combinations",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implement Form Validator Factory",
+            "description": "Create a factory for generating form validators based on validation schemas",
+            "dependencies": [
+              1,
+              3
+            ],
+            "details": "1. Design a validation schema format for defining form validation rules\n2. Create `FormValidatorFactory` to generate `IFormValidator` instances from schemas\n3. Implement field-level and form-level validation methods\n4. Add support for cross-field validation rules\n5. Implement validation context to share data between rules\n6. Create unit tests for the factory with complex validation scenarios",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Integrate with React Components",
+            "description": "Create React hooks and components to use the validation framework",
+            "dependencies": [
+              3,
+              4
+            ],
+            "details": "1. Create `useFormValidation` hook for form validation in functional components\n2. Implement `useFieldValidation` hook for individual field validation\n3. Create `ValidationProvider` context component for application-wide validation\n4. Implement validation feedback components for displaying errors\n5. Add support for real-time validation as users type\n6. Create integration tests with React Testing Library",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Develop Personal Information Form with Validation",
+        "description": "Create the Personal Information form with the validation framework and implement persistence using TypeORM.",
+        "details": "1. Define UserInfo model in `src/contracts/models/user-info.model.ts`:\n```typescript\n@Entity('user_info')\nexport class UserInfo {\n  @PrimaryGeneratedColumn('uuid')\n  id: string;\n\n  @Column()\n  firstName: string;\n\n  @Column()\n  lastName: string;\n\n  @Column()\n  email: string;\n\n  @Column()\n  phone: string;\n\n  @Column()\n  address: string;\n\n  @CreateDateColumn()\n  createdAt: Date;\n\n  @UpdateDateColumn()\n  updatedAt: Date;\n}\n```\n2. Create UserInfoViewModel in `src/services/viewmodels/user-info.viewmodel.ts`\n3. Implement form validation using the validation framework\n4. Create UserInfoScreen component in `src/presentation/screens/user-info/user-info-screen.tsx`\n5. Implement form UI with input fields and validation feedback\n6. Connect to repository for data persistence\n7. Update page status on form completion\n8. Implement form state management with React hooks\n9. Add loading and error states",
+        "testStrategy": "1. Test form validation with valid and invalid inputs\n2. Verify data persistence with repository mocks\n3. Test form submission and error handling\n4. Validate status updates on form completion\n5. Test form state management with different user interactions\n6. Verify form rendering across different device sizes",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3,
+          4
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define UserInfo Model and Repository",
+            "description": "Create the UserInfo model with TypeORM annotations and implement the repository interface for data persistence.",
+            "dependencies": [],
+            "details": "1. Define UserInfo model in src/contracts/models/user-info.model.ts with all required fields and TypeORM decorators\n2. Create IUserInfoRepository interface in src/contracts/repositories/user-info-repository.interface.ts\n3. Implement UserInfoRepository in src/data/repositories/user-info.repository.ts\n4. Register repository in dependency injection container",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Create UserInfo ViewModel and Form UI",
+            "description": "Implement the form UI components and the ViewModel to manage form state and business logic.",
+            "dependencies": [
+              1
+            ],
+            "details": "1. Create UserInfoViewModel in src/services/viewmodels/user-info.viewmodel.ts\n2. Implement PersonalInfoForm component in src/presentation/components/forms/personal-info-form.tsx\n3. Design form layout with proper styling and field arrangement\n4. Add form to appropriate screen component",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Integrate Validation Framework",
+            "description": "Apply the validation framework to the Personal Information form with appropriate validation rules.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "1. Define validation rules for each field (email format, required fields, phone format, etc.)\n2. Create UserInfoValidator class implementing IFormValidator interface\n3. Connect validation with form UI to show error messages\n4. Implement real-time validation feedback",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implement Form Submission and Status Tracking",
+            "description": "Complete the form submission process with repository connection and update status tracking on the dashboard.",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "1. Implement form submission handler in the ViewModel\n2. Connect to repository for data persistence\n3. Add loading states during submission\n4. Implement error handling for failed submissions\n5. Update dashboard status indicators when form is completed",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Implement Todo Management System",
+        "description": "Create the Todo management system with CRUD operations and offline storage using TypeORM.",
+        "details": "1. Define Todo model in `src/contracts/models/todo.model.ts`:\n```typescript\n@Entity('todo')\nexport class Todo {\n  @PrimaryGeneratedColumn('uuid')\n  id: string;\n\n  @Column()\n  title: string;\n\n  @Column()\n  description: string;\n\n  @Column()\n  isCompleted: boolean;\n\n  @Column()\n  priority: 'low' | 'medium' | 'high';\n\n  @Column({ nullable: true })\n  dueDate?: Date;\n\n  @CreateDateColumn()\n  createdAt: Date;\n\n  @UpdateDateColumn()\n  updatedAt: Date;\n}\n```\n2. Create TodoRepository in `src/data/repositories/todo.repository.ts`\n3. Implement TodoViewModel in `src/services/viewmodels/todo.viewmodel.ts`\n4. Create TodoListScreen in `src/presentation/screens/todo/todo-list-screen.tsx`\n5. Implement TodoItemComponent for rendering individual todos\n6. Create TodoFormScreen for adding/editing todos\n7. Implement filtering and sorting functionality\n8. Add swipe-to-delete and completion toggle\n9. Update dashboard status based on todo completion\n10. Implement offline persistence with TypeORM",
+        "testStrategy": "1. Test CRUD operations with repository mocks\n2. Verify todo list rendering with different data sets\n3. Test filtering and sorting functionality\n4. Validate form validation for todo creation/editing\n5. Test swipe gestures and completion toggle\n6. Verify status updates on dashboard\n7. Test offline persistence with mock database",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3,
+          4
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Todo Model and Repository",
+            "description": "Create the Todo model with TypeORM annotations and implement the TodoRepository with CRUD operations",
+            "dependencies": [],
+            "details": "1. Define Todo model in src/contracts/models/todo.model.ts with all required fields\n2. Create ITodoRepository interface in src/contracts/repos/todo-repository.interface.ts\n3. Implement TodoRepository in src/data/repos/todo.repository.ts\n4. Add unit tests for repository operations\n5. Register repository in dependency injection container",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Develop TodoViewModel",
+            "description": "Create the ViewModel to handle Todo business logic and state management",
+            "dependencies": [
+              1
+            ],
+            "details": "1. Create TodoViewModel in src/presentation/viewmodels/todo.viewmodel.ts\n2. Implement methods for loading, creating, updating, and deleting todos\n3. Add state management for loading, error handling, and operation status\n4. Implement filtering and sorting logic\n5. Create unit tests for ViewModel functionality",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement Todo List UI Component",
+            "description": "Create the UI component to display and interact with the list of todos",
+            "dependencies": [
+              2
+            ],
+            "details": "1. Create TodoListScreen component in src/presentation/screens/todo-list.screen.tsx\n2. Implement list rendering with FlatList or similar component\n3. Add empty state and loading indicators\n4. Implement swipe actions for delete/complete\n5. Add pull-to-refresh functionality\n6. Create unit and component tests",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Create Todo Form Component",
+            "description": "Implement the form for creating and editing todos with validation",
+            "dependencies": [
+              2
+            ],
+            "details": "1. Create TodoFormScreen component in src/presentation/screens/todo-form.screen.tsx\n2. Implement form fields with proper validation\n3. Add date picker for due date selection\n4. Implement priority selection component\n5. Create form submission logic with error handling\n6. Add unit and component tests",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement Advanced Features",
+            "description": "Add filtering, sorting, and additional UI interactions to enhance the todo management experience",
+            "dependencies": [
+              3,
+              4
+            ],
+            "details": "1. Create filter controls for showing completed/incomplete todos\n2. Implement sorting options (by date, priority, etc.)\n3. Add batch operations (delete multiple, mark multiple as complete)\n4. Implement status tracking integration\n5. Add animations for list changes and interactions\n6. Create comprehensive integration tests",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Implement Status Tracking System",
+        "description": "Create the status tracking system to monitor completion status of each page and update the dashboard accordingly.",
+        "details": "1. Define PageStatus model in `src/contracts/models/page-status.model.ts`:\n```typescript\n@Entity('page_status')\nexport class PageStatus {\n  @PrimaryColumn()\n  pageId: string;\n\n  @Column()\n  isCompleted: boolean;\n\n  @Column({ nullable: true })\n  completedAt?: Date;\n\n  @Column()\n  lastAccessed: Date;\n}\n```\n2. Create StatusTrackingService interface in `src/contracts/services/status-tracking-service.interface.ts`\n3. Implement concrete StatusTrackingService in `src/services/status-tracking.service.ts`\n4. Create StatusRepository in `src/data/repositories/status.repository.ts`\n5. Implement status update methods in ViewModels\n6. Create StatusContext with React Context API for global status access\n7. Update dashboard to reflect current status\n8. Implement status persistence with TypeORM\n9. Add status change notifications",
+        "testStrategy": "1. Test status tracking service with different page states\n2. Verify status persistence with repository mocks\n3. Test status updates from different screens\n4. Validate dashboard updates on status changes\n5. Test status context with mock components\n6. Verify status notifications",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define PageStatus Model and Interface",
+            "description": "Create the PageStatus model and related interfaces for tracking page completion status",
+            "dependencies": [],
+            "details": "1. Define PageStatus model in `src/contracts/models/page-status.model.ts`\n2. Create interface for status tracking operations in `src/contracts/services/status-tracking-service.interface.ts`\n3. Define status update events and notification interfaces\n4. Document model relationships and constraints",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement StatusTrackingService",
+            "description": "Create the service that handles status updates and persistence",
+            "dependencies": [
+              1
+            ],
+            "details": "1. Implement StatusTrackingService in `src/services/status-tracking.service.ts`\n2. Add methods for updating page status (markCompleted, markIncomplete)\n3. Implement timestamp tracking for page access and completion\n4. Add event emission for status changes\n5. Create unit tests for the service",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Create StatusRepository",
+            "description": "Implement the repository for persisting and retrieving page status data",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "1. Create StatusRepository in `src/data/repos/status-repository.ts`\n2. Implement CRUD operations for PageStatus entities\n3. Add query methods for filtering by completion status\n4. Implement batch update capabilities for dashboard statistics\n5. Create repository tests with mock database",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Integrate Status Tracking with React Context",
+            "description": "Create a global state management system for status tracking across the application",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "1. Create StatusContext in `src/contexts/status-context.tsx`\n2. Implement StatusProvider component with state management\n3. Create useStatus hook for components to access and update status\n4. Connect StatusContext to StatusTrackingService\n5. Add dashboard integration to display completion statistics\n6. Create test components to verify context integration",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Implement Photo Gallery with Camera Integration",
+        "description": "Create the photo gallery with camera integration for capturing and displaying photos with offline storage.",
+        "details": "1. Install required packages: `yarn add react-native-camera react-native-fs react-native-image-picker`\n2. Define Photo model in `src/contracts/models/photo.model.ts`:\n```typescript\n@Entity('photo')\nexport class Photo {\n  @PrimaryGeneratedColumn('uuid')\n  id: string;\n\n  @Column()\n  filename: string;\n\n  @Column()\n  path: string;\n\n  @Column({ nullable: true })\n  caption?: string;\n\n  @Column()\n  takenAt: Date;\n\n  @CreateDateColumn()\n  createdAt: Date;\n\n  @UpdateDateColumn()\n  updatedAt: Date;\n}\n```\n3. Create CameraService interface in `src/contracts/services/camera-service.interface.ts`\n4. Implement concrete CameraService in `src/services/camera.service.ts`\n5. Create FileSystemService for photo storage\n6. Implement PhotoRepository in `src/data/repositories/photo.repository.ts`\n7. Create PhotoViewModel in `src/services/viewmodels/photo.viewmodel.ts`\n8. Implement PhotoGalleryScreen in `src/presentation/screens/photo/photo-gallery-screen.tsx`\n9. Create CameraScreen for photo capture\n10. Implement photo viewing and management\n11. Add offline persistence with TypeORM\n12. Update dashboard status based on photo gallery usage",
+        "testStrategy": "1. Test camera service with mock camera\n2. Verify file system operations with mock file system\n3. Test photo repository with mock database\n4. Validate photo capture and storage flow\n5. Test gallery rendering with different photo sets\n6. Verify photo viewing and management\n7. Test permissions handling\n8. Validate status updates on dashboard",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3,
+          7
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Camera Service and Permissions Handler",
+            "description": "Create a service to handle camera integration and manage device permissions for camera access",
+            "dependencies": [],
+            "details": "1. Create camera service interface in `src/contracts/services/camera-service.interface.ts`\n2. Implement platform-specific camera service in `src/services/camera.service.ts`\n3. Add permissions handling for iOS and Android\n4. Implement camera initialization and cleanup methods\n5. Add error handling for permission denials and camera failures",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Create Photo Model and Repository",
+            "description": "Define the Photo model and implement the repository for CRUD operations",
+            "dependencies": [
+              1
+            ],
+            "details": "1. Implement Photo model in `src/contracts/models/photo.model.ts` with required fields\n2. Create PhotoRepository interface in `src/contracts/repositories/photo-repository.interface.ts`\n3. Implement concrete PhotoRepository in `src/data/repositories/photo.repository.ts`\n4. Add methods for saving, retrieving, updating and deleting photos\n5. Implement query methods for filtering photos by date and other attributes",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement File System Service",
+            "description": "Create a service to handle file system operations for storing and retrieving photos",
+            "dependencies": [
+              1
+            ],
+            "details": "1. Create file system service interface in `src/contracts/services/file-system-service.interface.ts`\n2. Implement concrete FileSystemService in `src/services/file-system.service.ts`\n3. Add methods for saving photos to device storage\n4. Implement file naming and organization strategy\n5. Add error handling for storage limitations and file access issues",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Develop Photo Gallery UI Component",
+            "description": "Create the UI component for displaying photos in a grid with thumbnails and navigation",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "1. Create PhotoGallery component in `src/components/photo-gallery/photo-gallery.component.tsx`\n2. Implement grid layout with responsive design\n3. Add photo thumbnail rendering with lazy loading\n4. Implement navigation to photo detail view\n5. Add empty state and loading indicators",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement Camera Capture Screen",
+            "description": "Create the camera capture screen with preview, capture button, and photo review",
+            "dependencies": [
+              1,
+              3
+            ],
+            "details": "1. Create CameraScreen component in `src/screens/camera/camera.screen.tsx`\n2. Implement camera preview with react-native-camera\n3. Add capture button and flash toggle controls\n4. Implement photo review after capture with option to retake or save\n5. Add navigation integration to return to gallery after capture",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Implement Offline Photo Persistence",
+            "description": "Ensure photos are properly stored and retrieved from local storage with TypeORM integration",
+            "dependencies": [
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "1. Integrate PhotoRepository with TypeORM configuration\n2. Implement synchronization between file system and database\n3. Add methods for bulk operations (import/export)\n4. Implement cleanup strategies for temporary files\n5. Add storage space monitoring and management",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Implement Offline Data Management",
+        "description": "Ensure all data operations work without internet connectivity and implement a queue system for future API synchronization.",
+        "details": "1. Create SynchronizationService interface in `src/contracts/services/synchronization-service.interface.ts`\n2. Implement concrete SynchronizationService in `src/services/synchronization.service.ts`\n3. Create CommandQueue for storing offline operations:\n```typescript\nexport class CommandQueue {\n  private queue: Command[] = [];\n  private storage: IStorageService;\n\n  constructor(storageService: IStorageService) {\n    this.storage = storageService;\n    this.loadQueue();\n  }\n\n  async enqueue(command: Command): Promise<void> {\n    this.queue.push(command);\n    await this.saveQueue();\n  }\n\n  async processQueue(apiService: IApiService): Promise<void> {\n    if (!this.queue.length) return;\n    \n    const command = this.queue[0];\n    try {\n      await command.execute(apiService);\n      this.queue.shift();\n      await this.saveQueue();\n    } catch (error) {\n      // Handle error, possibly retry or mark for manual resolution\n    }\n  }\n\n  private async loadQueue(): Promise<void> {\n    const savedQueue = await this.storage.getItem('command_queue');\n    if (savedQueue) {\n      this.queue = JSON.parse(savedQueue);\n    }\n  }\n\n  private async saveQueue(): Promise<void> {\n    await this.storage.setItem('command_queue', JSON.stringify(this.queue));\n  }\n}\n```\n4. Implement Command pattern for API operations\n5. Create NetworkService for detecting connectivity\n6. Implement offline-first strategy in repositories\n7. Add data conflict resolution strategies\n8. Create background synchronization service\n9. Implement error handling for offline operations",
+        "testStrategy": "1. Test command queue with mock storage\n2. Verify offline operation with network service mocks\n3. Test synchronization with mock API\n4. Validate conflict resolution strategies\n5. Test background synchronization\n6. Verify error handling for offline operations\n7. Test queue persistence across app restarts",
+        "priority": "high",
+        "dependencies": [
+          2,
+          6,
+          8
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design SynchronizationService Interface",
+            "description": "Create the SynchronizationService interface to define the contract for offline data synchronization",
+            "dependencies": [],
+            "details": "1. Define SynchronizationService interface in `src/contracts/services/synchronization-service.interface.ts`\n2. Include methods for queue management, synchronization status checking, manual sync triggering\n3. Define event types for synchronization status changes\n4. Document interface methods with JSDoc comments\n5. Create related types and enums for sync states and events",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Command Pattern for Offline Operations",
+            "description": "Create the Command pattern implementation to encapsulate and queue data operations",
+            "dependencies": [
+              1
+            ],
+            "details": "1. Create base Command abstract class in `src/services/commands/command.base.ts`\n2. Implement specific command types (Create, Update, Delete) for each entity\n3. Add command serialization/deserialization for storage\n4. Implement command execution logic with retry capabilities\n5. Add rollback functionality for failed commands",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Develop CommandQueue System",
+            "description": "Build the CommandQueue system to store and manage offline operations",
+            "dependencies": [
+              2
+            ],
+            "details": "1. Implement CommandQueue class in `src/services/commands/command-queue.ts`\n2. Add methods for enqueueing, persisting, and processing commands\n3. Implement queue loading from storage on initialization\n4. Add priority handling for different command types\n5. Implement batch processing capabilities for efficiency",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Create NetworkService for Connectivity Detection",
+            "description": "Implement a service to detect and monitor network connectivity status",
+            "dependencies": [],
+            "details": "1. Create NetworkService interface in `src/contracts/services/network-service.interface.ts`\n2. Implement concrete NetworkService in `src/services/network.service.ts`\n3. Add event listeners for network status changes\n4. Implement polling mechanism as fallback\n5. Create network status context provider for React components",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement Offline-First Repository Strategy",
+            "description": "Extend repositories to support offline-first operations using the command pattern",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "1. Create BaseOfflineRepository abstract class\n2. Implement local-first CRUD operations with command queueing\n3. Add optimistic UI updates for pending operations\n4. Implement repository factory with offline capabilities\n5. Add transaction support for offline operations",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Develop Conflict Resolution Strategies",
+            "description": "Implement conflict detection and resolution for offline data synchronization",
+            "dependencies": [
+              3,
+              5
+            ],
+            "details": "1. Create ConflictResolver interface and implementations\n2. Implement timestamp-based conflict detection\n3. Add strategies for different resolution approaches (server-wins, client-wins, merge)\n4. Create UI components for manual conflict resolution\n5. Implement conflict logging and analytics",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 7,
+            "title": "Implement Background Synchronization",
+            "description": "Create a background synchronization system that works when the app is active",
+            "dependencies": [
+              1,
+              3,
+              4,
+              6
+            ],
+            "details": "1. Implement SynchronizationService concrete class in `src/services/synchronization.service.ts`\n2. Add background sync scheduling with configurable intervals\n3. Implement batched synchronization for efficiency\n4. Add retry mechanisms with exponential backoff\n5. Create synchronization progress UI components\n6. Implement sync history and status reporting",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "Implement Comprehensive Testing and Error Handling",
+        "description": "Set up comprehensive testing infrastructure and implement centralized error handling across the application.",
+        "details": "1. Configure Jest with React Native Testing Library\n2. Create test utilities for mocking dependencies\n3. Implement snapshot testing for UI components\n4. Create integration tests for key user flows\n5. Implement unit tests for services and ViewModels\n6. Create centralized ErrorService in `src/infrastructure/error/error.service.ts`:\n```typescript\nexport class ErrorService implements IErrorService {\n  private errorHandlers: Map<string, ErrorHandler> = new Map();\n\n  registerHandler(errorType: string, handler: ErrorHandler): void {\n    this.errorHandlers.set(errorType, handler);\n  }\n\n  handleError(error: AppError): void {\n    const handler = this.errorHandlers.get(error.type) || this.defaultHandler;\n    handler(error);\n  }\n\n  private defaultHandler(error: AppError): void {\n    console.error('Unhandled error:', error);\n    // Show generic error message to user\n  }\n}\n```\n7. Implement error boundary components\n8. Create error logging service\n9. Add crash reporting infrastructure\n10. Implement performance monitoring",
+        "testStrategy": "1. Verify test coverage across all components\n2. Test error handling with simulated errors\n3. Validate error boundary components\n4. Test error logging and reporting\n5. Verify performance monitoring\n6. Run integration tests for key user flows\n7. Test snapshot comparison for UI components",
+        "priority": "high",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Configure Jest with React Native Testing Library",
+            "description": "Set up Jest testing framework with React Native Testing Library and configure it for the project",
+            "dependencies": [],
+            "details": "1. Install Jest, React Native Testing Library, and related dependencies\n2. Create jest.config.js with appropriate settings for React Native\n3. Set up test environment files and mocks for native modules\n4. Configure TypeScript for Jest compatibility\n5. Add test scripts to package.json\n6. Create example test to verify configuration",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Create Test Utilities and Mocking Framework",
+            "description": "Develop reusable test utilities and mocking framework to support all testing activities",
+            "dependencies": [
+              1
+            ],
+            "details": "1. Create test helpers for rendering components with providers\n2. Implement mock factories for common dependencies (navigation, services, etc.)\n3. Set up test data generators for models\n4. Create utilities for simulating user interactions\n5. Implement custom test matchers if needed\n6. Document usage patterns for the testing utilities",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement UI Component Testing",
+            "description": "Create comprehensive tests for UI components using snapshot and interaction testing",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "1. Implement snapshot tests for all UI components\n2. Create interaction tests for complex components\n3. Test component props and state management\n4. Verify accessibility compliance\n5. Test component error states and edge cases\n6. Implement visual regression testing strategy",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implement Service and ViewModel Testing",
+            "description": "Create unit and integration tests for services and ViewModels",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "1. Write unit tests for all service methods\n2. Test ViewModel state management and transformations\n3. Create integration tests for service interactions\n4. Test error handling in services\n5. Implement mock repositories for testing services\n6. Verify dependency injection patterns in tests",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement Centralized Error Handling System",
+            "description": "Create a robust error handling system with centralized error management",
+            "dependencies": [
+              1,
+              2,
+              4
+            ],
+            "details": "1. Implement ErrorService as specified in the requirements\n2. Create error boundary components for React Native\n3. Implement error logging and reporting mechanisms\n4. Create error handling hooks for components\n5. Set up error classification and prioritization\n6. Implement user-friendly error messages and recovery options",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Implement Performance Monitoring and Testing",
+            "description": "Set up performance monitoring tools and create performance tests",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "1. Integrate performance monitoring tools\n2. Create performance benchmarks for critical operations\n3. Implement memory leak detection tests\n4. Set up performance regression testing\n5. Create load testing for data-intensive operations\n6. Implement reporting and visualization for performance metrics",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-16T19:13:39.957Z",
+      "updated": "2025-07-16T19:21:36.924Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

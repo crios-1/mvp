@@ -1,97 +1,151 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# React Native MVVM Todo & Photo App
 
-# Getting Started
+A React Native mobile application built with **MVVM architecture**, **IDesign methodology**, and **SOLID principles** that provides offline-first functionality for managing personal information, todo items, and photo collections.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## 🚀 Features
 
-## Step 1: Start Metro
+- **Dashboard Navigation** - Central hub with color-coded tiles showing completion status
+- **Personal Information Form** - User profile management with reusable validation framework
+- **Todo Management** - Full CRUD operations with offline storage and status tracking
+- **Photo Gallery** - Camera integration with local photo storage and gallery display
+- **Offline-First** - All operations work without internet connectivity using TypeORM + SQLite
+- **Status Tracking** - Real-time dashboard updates based on page completion status
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 🏗️ Architecture
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### MVVM + IDesign + SOLID
+- **MVVM Pattern**: Clear separation of Models, Views, and ViewModels
+- **IDesign Methodology**: Services, Data Access, Infrastructure, Presentation, and Contracts layers
+- **SOLID Principles**: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion
+- **Design Patterns**: Repository, Command, Strategy, Observer, Factory, Adapter, Decorator
 
-```sh
-# Using npm
-npm start
+### Tech Stack
+- **React Native** 0.80.1+ with TypeScript
+- **TypeORM** with SQLite for offline data persistence
+- **React Navigation** 6+ for routing
+- **Jest** + React Native Testing Library for testing
+- **Dependency Injection** for service management
 
-# OR using Yarn
-yarn start
+## 📱 App Structure
+
+```
+src/
+├── models/          # TypeORM entities and data contracts
+├── views/           # React Native screens (Presentation Layer)
+├── viewmodels/      # Business logic and orchestration (Services Layer)
+├── repositories/    # Data access abstraction (Data Access Layer)
+├── services/        # Business services and external integrations
+├── infrastructure/  # Cross-cutting concerns (logging, validation, etc.)
+├── contracts/       # Interface definitions and data contracts
+└── utils/           # Shared utilities and helpers
 ```
 
-## Step 2: Build and run your app
+## 🛠️ Getting Started
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+### Prerequisites
+- Node.js >= 18
+- React Native development environment
+- iOS Simulator (for iOS) or Android Emulator (for Android)
 
-### Android
+### Installation
 
-```sh
-# Using npm
-npm run android
+```bash
+# Install dependencies
+npm install
 
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+# iOS (requires macOS)
+cd ios && pod install && cd ..
 npm run ios
 
-# OR using Yarn
-yarn ios
+# Android
+npm run android
+
+# Start Metro bundler
+npm start
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## 🧪 Testing
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+### Run All Tests
+```bash
+npm test
+```
 
-## Step 3: Modify your app
+### Run Tests with Coverage
+```bash
+npm run test:coverage
+```
 
-Now that you have successfully run the app, let's make changes!
+### Run Specific Test Files
+```bash
+npm test -- --testPathPattern=UserInfo
+```
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+### Testing Strategy
+- **Unit Tests**: Individual components, services, and utilities
+- **Integration Tests**: Service interactions and data flow
+- **E2E Tests**: Complete user workflows
+- **Dependency Injection**: All tests use mocked services for isolation
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+## 🏛️ Development Methodology
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+### IDesign Layers
+1. **Services Layer**: Business logic with clear contracts
+2. **Data Access Layer**: Repository pattern with abstraction
+3. **Infrastructure Layer**: Cross-cutting concerns
+4. **Presentation Layer**: UI components with minimal logic
+5. **Contracts Layer**: Interface definitions
 
-## Congratulations! :tada:
+### SOLID Principles
+- **SRP**: Each class has one responsibility
+- **OCP**: Open for extension, closed for modification
+- **LSP**: Derived classes can substitute base classes
+- **ISP**: Clients depend only on interfaces they use
+- **DIP**: High-level modules don't depend on low-level modules
 
-You've successfully run and modified your React Native App. :partying_face:
+### Key Design Patterns
+- **Repository Pattern**: Data access abstraction
+- **Command Pattern**: Operations and queue management
+- **Strategy Pattern**: Validation and business rules
+- **Observer Pattern**: State management
+- **Factory Pattern**: Object creation
+- **Adapter Pattern**: External integrations
 
-### Now what?
+## 📊 Data Models
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+```typescript
+// Core entities with TypeORM
+interface UserInfo { /* Personal information */ }
+interface Todo { /* Todo items with priority and status */ }
+interface Photo { /* Photo metadata and storage */ }
+interface PageStatus { /* Dashboard completion tracking */ }
+```
 
-# Troubleshooting
+## 🔄 Development Workflow
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+1. **Foundation** (Phase 1): IDesign setup, SOLID principles, DI container
+2. **Personal Info** (Phase 2): Form validation, status tracking
+3. **Todo Management** (Phase 3): CRUD operations, business rules
+4. **Photo Gallery** (Phase 4): Camera integration, file management
+5. **Optimization** (Phase 5): Performance, error handling
+6. **API Prep** (Phase 6): Future synchronization capabilities
 
-# Learn More
+## 🚧 Future Enhancements
 
-To learn more about React Native, take a look at the following resources:
+- Web API integration for data synchronization
+- Cloud photo storage
+- Advanced filtering and search
+- Push notifications
+- Multi-user support
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## 📝 Contributing
+
+1. Follow SOLID principles and IDesign methodology
+2. Write comprehensive tests for all new features
+3. Use dependency injection for service management
+4. Maintain clear separation of concerns
+5. Document interfaces and contracts
+
+## 📄 License
+
+This project is private and proprietary.
